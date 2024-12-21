@@ -36,7 +36,7 @@ func main() {
 		num := absDiffInt(leftCol[i], rightCol[i])
 		distanceSum += num
 	}
-	fmt.Printf("Distance Sum: %d\n", distanceSum) // Final score of Calc Similarity
+	fmt.Printf("Distance Sum: %d\n", distanceSum) // Final Sum of Distance
 
 	score := calcSimilarity(leftCol, rightCol)
 	fmt.Printf("Similarity Score: %d\n", score) // Final score of Calc Similarity
