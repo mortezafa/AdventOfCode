@@ -7,7 +7,6 @@ import (
 	"slices"
 	"strconv"
 	"strings"
-	"unicode"
 )
 
 func check(e error) {
@@ -22,71 +21,25 @@ func main() {
 	// 2. spilt into left and right list
 	// 3. sort each list
 	// 4.take abs of their difference
-
-	file, err := os.Open("input.txt")
-	check(err)
-
-	defer file.Close()
-	scanner := bufio.NewScanner(file)
-
-	var locationIDs []int
-	for scanner.Scan() {
-
-		line := scanner.Text()
-		line = strings.TrimSpace(line)
-		var sb strings.Builder
-
-		for i := 0; i < len(line); i++ {
-
-			if unicode.IsNumber(rune(line[i])) {
-				sb.WriteByte(line[i])
-				check(err)
-				// some if statement to append the byte if its a the last index
-				if i == len(line)-1 {
-					num1, _ := strconv.Atoi(sb.String())
-					locationIDs = append(locationIDs, num1)
-					sb.Reset()
-				}
-			} else {
-				if sb.Len() == 0 {
-					continue
-				}
-
-				num1, _ := strconv.Atoi(sb.String())
-				locationIDs = append(locationIDs, num1)
-				sb.Reset()
-
-			}
-		}
-	}
-	fmt.Print(locationIDs)
-
 	var leftCol []int
 	var rightCol []int
+	leftCol, rightCol = buildlists(leftCol, rightCol)
 
-	for i, num := range locationIDs {
-		if i%2 == 0 {
-			leftCol = append(leftCol, num)
-		} else {
-			rightCol = append(rightCol, num)
-		}
-	}
 	slices.Sort(leftCol)
 	fmt.Printf("left col: %v\n", leftCol)
 	slices.Sort(rightCol)
 	fmt.Printf("right col: %v\n", rightCol)
 
-	//distanceSum := 0
+	distanceSum := 0
 
-	//for i := range leftCol {
-	//	num := absDiffInt(leftCol[i], rightCol[i])
-	//	distanceSum += num
-	//}
-	//
-	//fmt.Print(distanceSum)
+	for i := range leftCol {
+		num := absDiffInt(leftCol[i], rightCol[i])
+		distanceSum += num
+	}
+	fmt.Printf("Distance Sum: %d\n", distanceSum) // Final score of Calc Similarity
 
 	score := calcSimilarity(leftCol, rightCol)
-	fmt.Print(score)
+	fmt.Printf("Similarity Score: %d\n", score) // Final score of Calc Similarity
 
 }
 
@@ -112,7 +65,26 @@ func calcSimilarity(leftCol, rightCol []int) int {
 		res += counter * leftNum
 		counter = 0
 	}
-
 	return res
+}
 
+func buildlists(leftCol, rightCol []int) ([]int, []int) {
+
+	file, err := os.Open("input.txt")
+	check(err)
+
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+
+		line := scanner.Text()
+		lineArr := strings.Split(line, "   ")
+		leftNum, _ := strconv.Atoi(lineArr[0])
+		rightNum, _ := strconv.Atoi(lineArr[1])
+
+		leftCol = append(leftCol, leftNum)
+		rightCol = append(rightCol, rightNum)
+	}
+	return leftCol, rightCol
 }
