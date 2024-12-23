@@ -1,6 +1,7 @@
 package main
 
 import (
+	"advent1.go/utils"
 	"bufio"
 	"fmt"
 	"os"
@@ -8,12 +9,6 @@ import (
 	"strconv"
 	"strings"
 )
-
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
 
 func main() {
 
@@ -33,7 +28,7 @@ func main() {
 	distanceSum := 0
 
 	for i := range leftCol {
-		num := absDiffInt(leftCol[i], rightCol[i])
+		num := utils.AbsDiffInt(leftCol[i], rightCol[i])
 		distanceSum += num
 	}
 	fmt.Printf("Distance Sum: %d\n", distanceSum) // Final Sum of Distance
@@ -41,14 +36,6 @@ func main() {
 	score := calcSimilarity(leftCol, rightCol)
 	fmt.Printf("Similarity Score: %d\n", score) // Final score of Calc Similarity
 
-}
-
-func absDiffInt(x, y int) int {
-	if y > x {
-		return y - x
-	} else {
-		return x - y
-	}
 }
 
 func calcSimilarity(leftCol, rightCol []int) int {
@@ -70,8 +57,8 @@ func calcSimilarity(leftCol, rightCol []int) int {
 
 func buildlists(leftCol, rightCol []int) ([]int, []int) {
 
-	file, err := os.Open("input.txt")
-	check(err)
+	file, err := os.Open("input1.txt")
+	utils.Check(err)
 
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -80,6 +67,7 @@ func buildlists(leftCol, rightCol []int) ([]int, []int) {
 
 		line := scanner.Text()
 		lineArr := strings.Split(line, "   ")
+		fmt.Printf("LINE ARRAY: %q\n", lineArr)
 		leftNum, _ := strconv.Atoi(lineArr[0])
 		rightNum, _ := strconv.Atoi(lineArr[1])
 
