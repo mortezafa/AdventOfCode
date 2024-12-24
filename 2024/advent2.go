@@ -16,7 +16,6 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-
 	safeCount := 0
 	for scanner.Scan() {
 		reportText := scanner.Text()
@@ -42,10 +41,30 @@ func incOrDec(reportArr []int) bool {
 	// The levels are either all increasing or all decreasing.
 	// Any two adjacent levels differ by at least one and at most three.
 	//increasing := incOrDec(reportArr[0], reportArr[len(reportArr)-1])
-	var initalState *bool
 
-	prev := reportArr[0]
-	for i, curr := range reportArr {
+	for r, _ := range reportArr {
+		newArray := append([]int{}, reportArr[:r]...) // Replace 'ElementType' with the type of reportArr
+		newArray = append(newArray, reportArr[r+1:]...)
+		if checkIfGood(newArray) {
+			return true
+		}
+	}
+	return false
+}
+
+func checkdiff(a, b int) bool {
+
+	absDiff := utils.AbsDiffInt(a, b)
+	if absDiff < 1 || absDiff > 3 {
+		return false
+	}
+	return true
+}
+
+func checkIfGood(reportLn []int) bool {
+	var initalState *bool
+	prev := reportLn[0]
+	for i, curr := range reportLn {
 		if i < 1 {
 			continue
 		}
@@ -72,15 +91,6 @@ func incOrDec(reportArr []int) bool {
 		if initalState != nil && *initalState != currentState {
 			return false
 		}
-	}
-	return true
-}
-
-func checkdiff(a, b int) bool {
-
-	absDiff := utils.AbsDiffInt(a, b)
-	if absDiff < 1 || absDiff > 3 {
-		return false
 	}
 	return true
 }
